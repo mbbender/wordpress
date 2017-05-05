@@ -81,6 +81,9 @@ define( 'WP_DEBUG_DISPLAY', {{key_or_default "wordpress/config/WP_DEBUG_DISPLAY"
  * Debugging? Enable these.
  */
 
+
+define('WP_MEMORY_LIMIT', '96M');
+
 /**
  * Load the Memcached config
  */
@@ -96,3 +99,4 @@ if ( ! defined( 'ABSPATH' ) )
 require_once( ABSPATH . 'wp-settings.php' );
 
 // The ending PHP tag is omitted. This is actually safer than including it.
+

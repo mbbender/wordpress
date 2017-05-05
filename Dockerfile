@@ -30,6 +30,7 @@ RUN set -ex \
         echo 'opcache.revalidate_freq=60'; \
         echo 'opcache.fast_shutdown=1'; \
         echo 'opcache.enable_cli=1'; \
+        echo 'max_input_vars=3000'; \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # The our helper/glue scripts and configuration for this specific app
@@ -81,10 +82,9 @@ RUN set -ex \
 # Copy the WordPress skeleton from this repo into the container
 # This includes any themes and/or plugins we've added to the content/themes and content/plugins directories.
 COPY /var/www/html /var/www/html
-RUN chown -R www-data:www-data /var/www/html/*
 
 # Install WordPress via wp-cli & move the default themes to our content dir
-ENV WORDPRESS_VERSION 4.7.3
+ENV WORDPRESS_VERSION 4.7.4
 RUN set -ex \
     && wp --allow-root core download --version=${WORDPRESS_VERSION} \
     && mv /var/www/html/wordpress/wp-content/themes/* /var/www/html/content/themes/
@@ -106,6 +106,11 @@ RUN set -ex \
 
 # The volume is defined after we install everything
 VOLUME /var/www/html
+
+RUN chown -R www-data:www-data /var/www/html \
+    && cd /var/www/html \
+    && chown -R www-data:www-data .
+
 
 CMD ["/usr/local/bin/containerpilot", \
     "apache2-foreground"]
